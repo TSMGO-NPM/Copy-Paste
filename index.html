@@ -4,7 +4,7 @@
     <link rel="icon" type="image/png" href="./favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>程式碼記錄與複製</title>
+    <title>Copy&Paste</title>
     <!-- Prism.js 語法高亮 -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
@@ -181,7 +181,7 @@
 <body>
     <div id="passwordModal" class="password-modal">
         <div class="password-modal-content">
-            <h2>請輸入密碼</h2>
+            <h2>輸入密碼</h2>
             <input type="password" id="passwordInput" placeholder="輸入密碼" required onkeypress="if(event.key === 'Enter') verifyPassword()">
             <p id="errorMessage" style="color: #e74c3c; display: none;">密碼錯誤！</p>
             <button class="submit-btn" onclick="verifyPassword()">提交</button>
@@ -190,7 +190,7 @@
 
     <div class="container" id="mainContainer">
         <h1>程式碼記錄</h1>
-        <button class="add-btn" onclick="openModal()">新增程式碼</button>
+        <button class="add-btn" onclick="openModal()">新增</button>
         <div id="codeList"></div>
     </div>
 
