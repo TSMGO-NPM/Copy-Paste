@@ -3,8 +3,8 @@
 <head>
     <link rel="icon" type="image/png" href="./favicon.png">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Copy&Paste</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>程式碼記錄與複製</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
         body {
@@ -16,6 +16,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            box-sizing: border-box;
         }
         .container {
             max-width: 900px;
@@ -205,8 +206,8 @@
     </div>
 
     <div class="container" id="mainContainer">
-        <h1>程式碼</h1>
-        <button class="add-btn" onclick="openModal()">新增</button>
+        <h1>程式碼記錄</h1>
+        <button class="add-btn" onclick="openModal()">新增程式碼</button>
         <div id="codeList"></div>
     </div>
 
@@ -239,19 +240,25 @@
         }
 
         function verifyPassword() {
-            const password = document.getElementById('passwordInput').value;
-            const errorMessage = document.getElementById('errorMessage');
-            if (password === DEFAULT_PASSWORD) {
-                document.getElementById('passwordModal').classList.remove('show');
-                setTimeout(() => {
-                    document.getElementById('passwordModal').style.display = 'none';
-                    document.getElementById('mainContainer').style.display = 'block';
-                    loadCodes();
-                }, 300);
-            } else {
-                errorMessage.style.display = 'block';
-                document.getElementById('passwordInput').value = '';
-                document.getElementById('passwordInput').focus();
+            try {
+                const password = document.getElementById('passwordInput').value;
+                const errorMessage = document.getElementById('errorMessage');
+                if (password === DEFAULT_PASSWORD) {
+                    const passwordModal = document.getElementById('passwordModal');
+                    passwordModal.classList.remove('show');
+                    setTimeout(() => {
+                        passwordModal.style.display = 'none';
+                        document.getElementById('mainContainer').style.display = 'block';
+                        loadCodes();
+                    }, 300);
+                } else {
+                    errorMessage.style.display = 'block';
+                    document.getElementById('passwordInput').value = '';
+                    document.getElementById('passwordInput').focus();
+                }
+            } catch (error) {
+                console.error('密碼驗證失敗:', error);
+                alert('密碼驗證失敗，請稍後重試！');
             }
         }
 
@@ -269,6 +276,7 @@
         function openModal() {
             try {
                 const modal = document.getElementById('modal');
+                if (!modal) throw new Error('Modal element not found');
                 modal.style.display = 'flex';
                 setTimeout(() => modal.classList.add('show'), 10);
                 document.getElementById('codeType').value = '';
@@ -284,6 +292,7 @@
         function closeModal() {
             try {
                 const modal = document.getElementById('modal');
+                if (!modal) throw new Error('Modal element not found');
                 modal.classList.remove('show');
                 setTimeout(() => modal.style.display = 'none', 300);
             } catch (error) {
@@ -369,11 +378,11 @@
 
         function escapeHTML(str) {
             return str.replace(/[&<>"']/g, match => ({
-                '&': '&',
-                '<': '<',
-                '>': '>',
-                '"': '"',
-                "'": '''
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&apos;'
             }[match] || match));
         }
 
@@ -411,9 +420,9 @@
             }
         }
 
-        document.getElementById('modal').onclick = function(e) {
+        document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
-        };
+        });
     </script>
 </body>
 </html>
