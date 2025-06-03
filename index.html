@@ -4,8 +4,7 @@
     <link rel="icon" type="image/png" href="./favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>程式碼記錄與複製</title>
-    <!-- Prism.js 語法高亮 -->
+    <title>Copy&Paste</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
     <style>
         body {
@@ -14,6 +13,9 @@
             padding: 20px;
             background-color: #e9ecef;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .container {
             max-width: 900px;
@@ -23,10 +25,12 @@
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             display: none;
+            flex-grow: 1;
         }
         h1 {
             text-align: center;
             color: #2c3e50;
+            font-size: clamp(1.5rem, 5vw, 2rem);
         }
         .add-btn {
             display: block;
@@ -37,7 +41,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: clamp(0.9rem, 4vw, 1rem);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .add-btn:hover {
@@ -67,8 +71,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
+            width: min(90%, 500px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
             transform: translateY(-50px);
             transition: transform 0.3s ease;
@@ -83,7 +86,7 @@
             border: 1px solid #ddd;
             border-radius: 5px;
             box-sizing: border-box;
-            font-size: 14px;
+            font-size: clamp(0.8rem, 3.5vw, 0.9rem);
         }
         .modal-content textarea {
             resize: vertical;
@@ -94,7 +97,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: clamp(0.8rem, 3.5vw, 0.9rem);
             transition: background-color 0.2s;
         }
         .modal-content button.save-btn {
@@ -128,11 +131,12 @@
         .code-item h3 {
             margin: 0 0 10px;
             color: #2c3e50;
+            font-size: clamp(1.1rem, 4vw, 1.2rem);
         }
         .code-item .created-at {
             margin: 0 0 10px;
             color: #7f8c8d;
-            font-size: 14px;
+            font-size: clamp(0.8rem, 3.5vw, 0.9rem);
         }
         .code-item pre {
             background-color: #282c34;
@@ -141,6 +145,7 @@
             overflow-x: auto;
             max-height: 400px;
             color: #ffffff !important;
+            font-size: clamp(0.7rem, 3vw, 0.8rem);
         }
         .code-item code {
             color: #ffffff !important;
@@ -153,7 +158,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: clamp(0.8rem, 3.5vw, 0.9rem);
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .delete-btn {
@@ -167,12 +172,23 @@
             background-color: #c0392b;
         }
         @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
+            }
             .modal-content, .password-modal-content {
                 width: 95%;
+                padding: 15px;
             }
             .add-btn, .copy-btn, .delete-btn {
                 width: 100%;
                 padding: 12px;
+                margin-bottom: 10px;
+            }
+            .modal-content button, .password-modal-content button {
+                width: 100%;
                 margin-bottom: 10px;
             }
         }
@@ -189,8 +205,8 @@
     </div>
 
     <div class="container" id="mainContainer">
-        <h1>程式碼記錄</h1>
-        <button class="add-btn" onclick="openModal()">新增程式碼</button>
+        <h1>程式碼</h1>
+        <button class="add-btn" onclick="openModal()">新增</button>
         <div id="codeList"></div>
     </div>
 
@@ -198,7 +214,7 @@
         <div class="modal-content">
             <h2>新增程式碼</h2>
             <label>程式類型:</label>
-            <input type="text" id="codeType" placeholder="名稱>
+            <input type="text" id="codeType" placeholder="名稱">
             <label>說明/標題:</label>
             <input type="text" id="codeTitle" placeholder="簡短描述" required>
             <label>程式碼內容:</label>
@@ -222,7 +238,6 @@
             return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
-        
         function verifyPassword() {
             const password = document.getElementById('passwordInput').value;
             const errorMessage = document.getElementById('errorMessage');
@@ -240,7 +255,6 @@
             }
         }
 
-        
         (function initialize() {
             try {
                 const passwordModal = document.getElementById('passwordModal');
@@ -252,7 +266,6 @@
             }
         })();
 
-        
         function openModal() {
             try {
                 const modal = document.getElementById('modal');
@@ -268,7 +281,6 @@
             }
         }
 
-        
         function closeModal() {
             try {
                 const modal = document.getElementById('modal');
@@ -279,7 +291,6 @@
             }
         }
 
-        
         function saveCode() {
             try {
                 const type = document.getElementById('codeType').value.trim();
@@ -310,14 +321,12 @@
             }
         }
 
-        
         function loadCodes() {
             try {
                 const codeList = document.getElementById('codeList');
                 codeList.innerHTML = '';
                 let codes = JSON.parse(localStorage.getItem('codes') || '[]');
 
-                
                 codes = codes.filter(code => code && code.type && code.title && code.content && code.id);
 
                 codes.forEach(code => {
@@ -344,7 +353,6 @@
             }
         }
 
-        
         function deleteCode(id) {
             try {
                 if (confirm('確定要刪除這筆程式碼記錄嗎？')) {
@@ -359,18 +367,16 @@
             }
         }
 
-        
         function escapeHTML(str) {
             return str.replace(/[&<>"']/g, match => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;'
+                '&': '&',
+                '<': '<',
+                '>': '>',
+                '"': '"',
+                "'": '''
             }[match] || match));
         }
 
-        
         function copyCode(encodedContent) {
             try {
                 const content = decodeURIComponent(atob(encodedContent));
@@ -390,7 +396,6 @@
             }
         }
 
-        
         function fallbackCopy(content) {
             try {
                 const textarea = document.createElement('textarea');
@@ -406,7 +411,6 @@
             }
         }
 
-       
         document.getElementById('modal').onclick = function(e) {
             if (e.target === this) closeModal();
         };
